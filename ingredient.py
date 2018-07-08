@@ -22,10 +22,14 @@
 from __future__ import (absolute_import, print_function, unicode_literals)
 
 class ingredient:
-    def __init__(self, name, quantity, unit):
+    def __init__(self, name, quantity, unit, optional=False):
         self.name = name
         self.quantity = quantity
         self.unit = unit
+        self.optional = optional
 
     def __str__(self):
-        return '{} {} {}'.format(self.quantity, self.unit, self.name)
+        result = '{} {} {}'.format(self.quantity, self.unit, self.name)
+        if self.optional:
+            result += ' (optional)'
+        return result
