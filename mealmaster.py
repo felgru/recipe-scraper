@@ -32,7 +32,8 @@ def recipeToMealMaster(recipe):
            'Cooktime: {r.cooktime}\n' \
            'Preparation Time: {r.preptime}\n' \
            'Yield: {r.portions}\n' \
-           'Categories: {cats}\n\n' \
+           'Categories: {cats}\n' \
+           'Link: {r.source}\n\n' \
            '{ingredients}\n\n' \
            '{r.description}\n\n' \
            'MMMMM\n'.format(r=recipe, cats=', '.join(recipe.categories),
