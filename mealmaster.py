@@ -35,6 +35,6 @@ def recipeToMealMaster(recipe):
            'Categories: {cats}\n' \
            'Link: {r.source}\n\n' \
            '{ingredients}\n\n' \
-           '{r.description}\n\n' \
+           '{r.instructions}\n\n' \
            'MMMMM\n'.format(r=recipe, cats=', '.join(recipe.categories),
                             ingredients=ingredients)

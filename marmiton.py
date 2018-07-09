@@ -61,11 +61,11 @@ def readRecipeFromMarmitonPage(page):
     cooktime = m.group(1)
     m = re.search(r'\{"\@context":"http:\/\/schema.org","@type":"Recipe",.+\}',
                   page)
-    description_json = json.loads(m.group(0))
-    description = description_json['recipeInstructions'][0]['text']
-    for instruction in description_json['recipeInstructions'][1:]:
-        description += '\n\n' + instruction['text']
-    portions = description_json['recipeYield']
+    instructions_json = json.loads(m.group(0))
+    instructions = instructions_json['recipeInstructions'][0]['text']
+    for instruction in instructions_json['recipeInstructions'][1:]:
+        instructions += '\n\n' + instruction['text']
+    portions = instructions_json['recipeYield']
     return recipe.recipe(
             title = title,
             cooktime = cooktime,
@@ -73,5 +73,5 @@ def readRecipeFromMarmitonPage(page):
             portions = portions,
             categories = categories,
             ingredients = ingredients,
-            description = description,
+            instructions = instructions,
             source = source)

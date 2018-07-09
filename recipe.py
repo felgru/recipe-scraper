@@ -25,12 +25,12 @@ import ingredient
 
 class recipe:
     def __init__(self, title, cooktime, preptime, portions, categories,
-                 ingredients, description, source=None):
+                 ingredients, instructions, source=None):
         self.title = title
         self.cooktime = cooktime
         self.preptime = preptime
         self.portions = portions
         self.categories = categories
         self.ingredients = ingredients
-        self.description = description
+        self.instructions = instructions
         self.source = source
