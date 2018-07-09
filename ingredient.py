@@ -33,3 +33,7 @@ class ingredient:
         if self.optional:
             result += ' (optional)'
         return result
+
+    def __repr__(self):
+        return 'ingredient("{s.name}", {s.quantity}, "{s.unit}",' \
+               ' optional={s.optional})'.format(s=self)
