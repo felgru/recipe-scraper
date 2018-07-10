@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2018  Felix Gruber
@@ -23,19 +23,32 @@
 from __future__ import (absolute_import, print_function, unicode_literals)
 
 import argparse
+import sys
 
 from web import getUrl
 
+# importers
 from marmiton import readRecipeFromMarmitonPage
+
+# exporters
+from gourmet import recipeToGourmet
 from mealmaster import recipeToMealMaster
 
 aparser = argparse.ArgumentParser(
         description='transform a recipe from a cooking website into' \
                     ' a machine-readable format')
+aparser.add_argument('-f', '--format', action='store', default='m',
+                     help='output format: m for mealmaster and g for gourmet')
 aparser.add_argument('url', action='store',
                      help='URL of the recipe')
 args = aparser.parse_args()
 
 recipe_page = getUrl(args.url)
 recipe = readRecipeFromMarmitonPage(recipe_page)
-print(recipeToMealMaster(recipe))
+if args.format == 'm':
+    print(recipeToMealMaster(recipe))
+elif args.format == 'g':
+    print(recipeToGourmet(recipe))
+else:
+    print('unknown format argument:', args.format)
+    sys.exit(1)

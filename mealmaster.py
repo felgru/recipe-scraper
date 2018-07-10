@@ -26,7 +26,7 @@ import recipe
 def recipeToMealMaster(recipe):
     ingredients = ''
     for ingredient in recipe.ingredients:
-        ingredients += ' ' + unicode(ingredient) + '\n'
+        ingredients += ' ' + str(ingredient) + '\n'
     return 'MMMMM----- Recipe via Meal-Master\n\n' \
            'Title: {r.title}\n' \
            'Cooktime: {r.cooktime}\n' \
