@@ -40,20 +40,28 @@ def ingredientToGourmet(ingredient):
     key.text = ingredient.name
     return ingrXML
 
-def recipeToGourmet(recipe):
-    gourmetDoc = ET.Element("gourmetDoc")
-    r = ET.SubElement(gourmetDoc, "recipe")
-    ET.SubElement(r, "title", text=recipe.title)
-    ET.SubElement(r, "link", text=recipe.source)
-    ET.SubElement(r, "cooktime", text=recipe.cooktime)
-    ET.SubElement(r, "yields", text=recipe.portions)
-    ingrs = ET.SubElement(r, "ingredient-list")
-    for ingredient in recipe.ingredients:
-        ingrs.append(ingredientToGourmet(ingredient))
-    instructions = ET.SubElement(r, "instructions")
-    instructions.text = recipe.instructions
-    res = '<?xml version="1.0" encoding="UTF-8"?>\n' \
-          '<!DOCTYPE gourmetDoc>\n' \
-          + ET.tostring(gourmetDoc) \
-              .decode(encoding='utf8')
-    return res
+class Gourmet:
+    def __init__(self, recipe):
+        self.recipe = recipe
+
+    @staticmethod
+    def format_string():
+        return 'g'
+
+    def __str__(self):
+        gourmetDoc = ET.Element("gourmetDoc")
+        r = ET.SubElement(gourmetDoc, "recipe")
+        ET.SubElement(r, "title", text=self.recipe.title)
+        ET.SubElement(r, "link", text=self.recipe.source)
+        ET.SubElement(r, "cooktime", text=self.recipe.cooktime)
+        ET.SubElement(r, "yields", text=self.recipe.portions)
+        ingrs = ET.SubElement(r, "ingredient-list")
+        for ingredient in self.recipe.ingredients:
+            ingrs.append(ingredientToGourmet(ingredient))
+        instructions = ET.SubElement(r, "instructions")
+        instructions.text = self.recipe.instructions
+        res = '<?xml version="1.0" encoding="UTF-8"?>\n' \
+              '<!DOCTYPE gourmetDoc>\n' \
+              + ET.tostring(gourmetDoc) \
+                  .decode(encoding='utf8')
+        return res

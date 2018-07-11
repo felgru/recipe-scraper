@@ -29,8 +29,13 @@ from web import getUrl
 from marmiton import readRecipeFromMarmitonPage
 
 # exporters
-from gourmet import recipeToGourmet
-from mealmaster import recipeToMealMaster
+from gourmet import Gourmet
+from mealmaster import MealMaster
+
+class Exporters(dict):
+    def add_format(self, format_class):
+        key = format_class.format_string()
+        self[key] = format_class
 
 aparser = argparse.ArgumentParser(
         description='transform a recipe from a cooking website into' \
@@ -43,10 +48,13 @@ args = aparser.parse_args()
 
 recipe_page = getUrl(args.url)
 recipe = readRecipeFromMarmitonPage(recipe_page)
-if args.format == 'm':
-    print(recipeToMealMaster(recipe))
-elif args.format == 'g':
-    print(recipeToGourmet(recipe))
+
+exporters = Exporters()
+exporters.add_format(MealMaster)
+exporters.add_format(Gourmet)
+if args.format in exporters:
+    out = exporters[args.format](recipe)
 else:
     print('unknown format argument:', args.format)
     sys.exit(1)
+print(out)

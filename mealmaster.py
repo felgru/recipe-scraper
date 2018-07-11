@@ -21,18 +21,27 @@
 
 import recipe
 
-def recipeToMealMaster(recipe):
-    ingredients = ''
-    for ingredient in recipe.ingredients:
-        ingredients += ' ' + str(ingredient) + '\n'
-    return 'MMMMM----- Recipe via Meal-Master\n\n' \
-           'Title: {r.title}\n' \
-           'Cooktime: {r.cooktime}\n' \
-           'Preparation Time: {r.preptime}\n' \
-           'Yield: {r.portions}\n' \
-           'Categories: {cats}\n' \
-           'Link: {r.source}\n\n' \
-           '{ingredients}\n\n' \
-           '{r.instructions}\n\n' \
-           'MMMMM\n'.format(r=recipe, cats=', '.join(recipe.categories),
-                            ingredients=ingredients)
+class MealMaster:
+    def __init__(self, recipe):
+        self.recipe = recipe
+
+    @staticmethod
+    def format_string():
+        return 'm'
+
+    def __str__(self):
+        ingredients = ''
+        for ingredient in self.recipe.ingredients:
+            ingredients += ' ' + str(ingredient) + '\n'
+        return 'MMMMM----- Recipe via Meal-Master\n\n' \
+               'Title: {r.title}\n' \
+               'Cooktime: {r.cooktime}\n' \
+               'Preparation Time: {r.preptime}\n' \
+               'Yield: {r.portions}\n' \
+               'Categories: {cats}\n' \
+               'Link: {r.source}\n\n' \
+               '{ingredients}\n\n' \
+               '{r.instructions}\n\n' \
+               'MMMMM\n'.format(r=self.recipe,
+                                cats=', '.join(self.recipe.categories),
+                                ingredients=ingredients)
