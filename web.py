@@ -19,14 +19,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import (absolute_import, print_function, unicode_literals)
-
-try:
-    # For Python 3.0 and later
-    from urllib.request import urlopen, Request
-except ImportError:
-    # Fall back to Python 2's urllib2
-    from urllib2 import urlopen, Request
+from urllib.request import urlopen, Request
 import socket
 
 socket.setdefaulttimeout(30)

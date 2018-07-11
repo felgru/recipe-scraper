@@ -19,8 +19,6 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from __future__ import (absolute_import, print_function, unicode_literals)
-
 import ingredient
 
 class recipe:
