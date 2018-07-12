@@ -26,50 +26,57 @@ import sys
 import ingredient
 import recipe
 
-def readIngredients(recipe_json):
-    ingredients_json = recipe_json['ingredients']
-    ingredients = []
-    for ing in ingredients_json:
-        ingredients.append(ingredient.ingredient(
-            ing['name'],
-            ing['qty'],
-            ing['unit']))
-    return ingredients
+class Marmiton:
+    @staticmethod
+    def netloc():
+        return 'www.marmiton.org'
 
-def readRecipeFromMarmitonPage(page):
-    # m = re.search('<meta property="og:title" content="(.*)" />', page)
-    # title = m.group(1)
-    m = re.search(r'<script type="text/javascript">var Mrtn = Mrtn \|\| \{\}; Mrtn\.recipesData = (.+?);</script>', page)
-    all_json = json.loads(m.group(1))
-    recipe_json = all_json['recipes'][0]
-    title = recipe_json['name']
-    source = recipe_json['url']
-    # portions = '{} personnes'.format(recipe_json['nb_pers'])
-    categories = []
-    ingredients = readIngredients(recipe_json)
-    m = re.search(r'<div class="recipe-infos__timmings__detail">', page)
-    timings_start_pos = m.start()
-    prep_pattern = re.compile('<div class="recipe-infos__timmings__preparation">.*?<span class="recipe-infos__timmings__value">\s*(.*?)\s*</span>',
-            re.MULTILINE | re.DOTALL)
-    m = prep_pattern.search(page, timings_start_pos)
-    preptime = m.group(1)
-    cook_pattern = re.compile('<div class="recipe-infos__timmings__cooking">.*?<span class="recipe-infos__timmings__value">\s*(.*?)\s*</span>',
-            re.MULTILINE | re.DOTALL)
-    m = cook_pattern.search(page, timings_start_pos)
-    cooktime = m.group(1)
-    m = re.search(r'\{"\@context":"http:\/\/schema.org","@type":"Recipe",.+\}',
-                  page)
-    instructions_json = json.loads(m.group(0))
-    instructions = instructions_json['recipeInstructions'][0]['text']
-    for instruction in instructions_json['recipeInstructions'][1:]:
-        instructions += '\n\n' + instruction['text']
-    portions = instructions_json['recipeYield']
-    return recipe.recipe(
-            title = title,
-            cooktime = cooktime,
-            preptime = preptime,
-            portions = portions,
-            categories = categories,
-            ingredients = ingredients,
-            instructions = instructions,
-            source = source)
+    @staticmethod
+    def readIngredients(recipe_json):
+        ingredients_json = recipe_json['ingredients']
+        ingredients = []
+        for ing in ingredients_json:
+            ingredients.append(ingredient.ingredient(
+                ing['name'],
+                ing['qty'],
+                ing['unit']))
+        return ingredients
+
+    @staticmethod
+    def importRecipe(page):
+        # m = re.search('<meta property="og:title" content="(.*)" />', page)
+        # title = m.group(1)
+        m = re.search(r'<script type="text/javascript">var Mrtn = Mrtn \|\| \{\}; Mrtn\.recipesData = (.+?);</script>', page)
+        all_json = json.loads(m.group(1))
+        recipe_json = all_json['recipes'][0]
+        title = recipe_json['name']
+        source = recipe_json['url']
+        # portions = '{} personnes'.format(recipe_json['nb_pers'])
+        categories = []
+        ingredients = Marmiton.readIngredients(recipe_json)
+        m = re.search(r'<div class="recipe-infos__timmings__detail">', page)
+        timings_start_pos = m.start()
+        prep_pattern = re.compile('<div class="recipe-infos__timmings__preparation">.*?<span class="recipe-infos__timmings__value">\s*(.*?)\s*</span>',
+                re.MULTILINE | re.DOTALL)
+        m = prep_pattern.search(page, timings_start_pos)
+        preptime = m.group(1)
+        cook_pattern = re.compile('<div class="recipe-infos__timmings__cooking">.*?<span class="recipe-infos__timmings__value">\s*(.*?)\s*</span>',
+                re.MULTILINE | re.DOTALL)
+        m = cook_pattern.search(page, timings_start_pos)
+        cooktime = m.group(1)
+        m = re.search(r'\{"\@context":"http:\/\/schema.org","@type":"Recipe",.+\}',
+                      page)
+        instructions_json = json.loads(m.group(0))
+        instructions = instructions_json['recipeInstructions'][0]['text']
+        for instruction in instructions_json['recipeInstructions'][1:]:
+            instructions += '\n\n' + instruction['text']
+        portions = instructions_json['recipeYield']
+        return recipe.recipe(
+                title = title,
+                cooktime = cooktime,
+                preptime = preptime,
+                portions = portions,
+                categories = categories,
+                ingredients = ingredients,
+                instructions = instructions,
+                source = source)

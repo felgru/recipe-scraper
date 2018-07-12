@@ -22,11 +22,12 @@
 
 import argparse
 import sys
+import urllib
 
 from web import getUrl
 
 # importers
-from marmiton import readRecipeFromMarmitonPage
+from marmiton import Marmiton
 
 # exporters
 from gourmet import Gourmet
@@ -37,17 +38,37 @@ class Exporters(dict):
         key = format_class.format_string()
         self[key] = format_class
 
+class Importers(dict):
+    def add_scraper(self, scraper_class):
+        key = scraper_class.netloc()
+        self[key] = scraper_class
+
 aparser = argparse.ArgumentParser(
         description='transform a recipe from a cooking website into' \
                     ' a machine-readable format')
 aparser.add_argument('-f', '--format', action='store', default='m',
                      help='output format: m for mealmaster and g for gourmet')
+# -i specifies the netloc of the webscraper to use,
+# This is useful for development so that we can specify the scraper
+# when reading from a saved html file.
+aparser.add_argument('-i', '--input-site', dest='netloc',
+                     action='store', default=None,
+                     help=argparse.SUPPRESS)
 aparser.add_argument('url', action='store',
                      help='URL of the recipe')
 args = aparser.parse_args()
 
-recipe_page = getUrl(args.url)
-recipe = readRecipeFromMarmitonPage(recipe_page)
+importers = Importers()
+importers.add_scraper(Marmiton)
+if not args.netloc:
+    args.netloc = urllib.parse.urlparse(args.url).netloc
+
+if args.netloc in importers:
+    recipe_page = getUrl(args.url)
+    recipe = importers[args.netloc].importRecipe(recipe_page)
+else:
+    print('unknown website argument:', args.netloc)
+    sys.exit(1)
 
 exporters = Exporters()
 exporters.add_format(MealMaster)
