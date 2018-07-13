@@ -43,6 +43,12 @@ class Marmiton:
         return ingredients
 
     @staticmethod
+    def readHTMLInstructions(page):
+        m = re.search(r'<ol class="recipe-preparation__list">.*?</ol>',
+                      page, re.MULTILINE | re.DOTALL)
+        return m.group(0)
+
+    @staticmethod
     def importRecipe(page):
         # m = re.search('<meta property="og:title" content="(.*)" />', page)
         # title = m.group(1)
@@ -71,6 +77,7 @@ class Marmiton:
         for instruction in instructions_json['recipeInstructions'][1:]:
             instructions_plain += '\n\n' + instruction['text']
         portions = instructions_json['recipeYield']
+        instructions_html = Marmiton.readHTMLInstructions(page)
         return recipe.recipe(
                 title = title,
                 cooktime = cooktime,
@@ -79,4 +86,5 @@ class Marmiton:
                 categories = categories,
                 ingredients = ingredients,
                 instructions_plain = instructions_plain,
+                instructions_html = instructions_html,
                 source = source)
