@@ -50,11 +50,15 @@ class Gourmet:
 
     def __str__(self):
         gourmetDoc = ET.Element("gourmetDoc")
-        r = ET.SubElement(gourmetDoc, "recipe")
-        ET.SubElement(r, "title", text=self.recipe.title)
-        ET.SubElement(r, "link", text=self.recipe.source)
-        ET.SubElement(r, "cooktime", text=self.recipe.cooktime)
-        ET.SubElement(r, "yields", text=self.recipe.portions)
+        r = ET.SubElement(gourmetDoc, "recipe", id="1")
+        title = ET.SubElement(r, "title")
+        title.text = self.recipe.title
+        link = ET.SubElement(r, "link")
+        link.text = self.recipe.source
+        cooktime = ET.SubElement(r, "cooktime")
+        cooktime.text = self.recipe.cooktime
+        yields = ET.SubElement(r, "yields")
+        yields.text = self.recipe.portions
         ingrs = ET.SubElement(r, "ingredient-list")
         for ingredient in self.recipe.ingredients:
             ingrs.append(ingredientToGourmet(ingredient))
