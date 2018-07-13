@@ -67,9 +67,9 @@ class Marmiton:
         m = re.search(r'\{"\@context":"http:\/\/schema.org","@type":"Recipe",.+\}',
                       page)
         instructions_json = json.loads(m.group(0))
-        instructions = instructions_json['recipeInstructions'][0]['text']
+        instructions_plain = instructions_json['recipeInstructions'][0]['text']
         for instruction in instructions_json['recipeInstructions'][1:]:
-            instructions += '\n\n' + instruction['text']
+            instructions_plain += '\n\n' + instruction['text']
         portions = instructions_json['recipeYield']
         return recipe.recipe(
                 title = title,
@@ -78,5 +78,5 @@ class Marmiton:
                 portions = portions,
                 categories = categories,
                 ingredients = ingredients,
-                instructions = instructions,
+                instructions_plain = instructions_plain,
                 source = source)

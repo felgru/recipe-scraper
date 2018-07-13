@@ -41,7 +41,7 @@ class MealMaster:
                'Categories: {cats}\n' \
                'Link: {r.source}\n\n' \
                '{ingredients}\n\n' \
-               '{r.instructions}\n\n' \
+               '{r.instructions_plain}\n\n' \
                'MMMMM\n'.format(r=self.recipe,
                                 cats=', '.join(self.recipe.categories),
                                 ingredients=ingredients)
