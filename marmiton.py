@@ -43,10 +43,17 @@ class Marmiton:
         return ingredients
 
     @staticmethod
-    def readHTMLInstructions(page):
-        m = re.search(r'<ol class="recipe-preparation__list">.*?</ol>',
-                      page, re.MULTILINE | re.DOTALL)
-        return m.group(0)
+    def readInstructions(instructions_json):
+        instructions_html = '<b>Etape 1</b>\n\n' \
+                + instructions_json[0]['text']
+        instructions_plain = instructions_json[0]['text']
+        etappe = 2
+        for instruction in instructions_json[1:]:
+            instructions_plain += '\n\n' + instruction['text']
+            instructions_html += '\n\n<b>Etappe {}</b>\n\n{}' \
+                    .format(etappe, instruction['text'])
+            etappe += 1
+        return instructions_plain, instructions_html
 
     @staticmethod
     def importRecipe(page):
@@ -73,11 +80,9 @@ class Marmiton:
         m = re.search(r'\{"\@context":"http:\/\/schema.org","@type":"Recipe",.+\}',
                       page)
         instructions_json = json.loads(m.group(0))
-        instructions_plain = instructions_json['recipeInstructions'][0]['text']
-        for instruction in instructions_json['recipeInstructions'][1:]:
-            instructions_plain += '\n\n' + instruction['text']
+        instructions_plain, instructions_html = Marmiton.readInstructions(
+                instructions_json['recipeInstructions'])
         portions = instructions_json['recipeYield']
-        instructions_html = Marmiton.readHTMLInstructions(page)
         return recipe.recipe(
                 title = title,
                 cooktime = cooktime,
