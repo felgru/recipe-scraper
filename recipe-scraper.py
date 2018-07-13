@@ -27,6 +27,7 @@ import urllib
 from web import getUrl
 
 # importers
+from atelierdeschefs import AtelierDesChefs
 from marmiton import Marmiton
 
 # exporters
@@ -59,6 +60,7 @@ aparser.add_argument('url', action='store',
 args = aparser.parse_args()
 
 importers = Importers()
+importers.add_scraper(AtelierDesChefs)
 importers.add_scraper(Marmiton)
 if not args.netloc:
     args.netloc = urllib.parse.urlparse(args.url).netloc
