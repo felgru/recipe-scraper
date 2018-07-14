@@ -45,8 +45,8 @@ class Gourmet:
         self.recipe = recipe
 
     @staticmethod
-    def format_string():
-        return 'g'
+    def file_extension():
+        return '.grmt'
 
     def __str__(self):
         gourmetDoc = ET.Element("gourmetDoc")

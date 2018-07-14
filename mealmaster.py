@@ -26,8 +26,8 @@ class MealMaster:
         self.recipe = recipe
 
     @staticmethod
-    def format_string():
-        return 'm'
+    def file_extension():
+        return '.mmf'
 
     def __str__(self):
         ingredients = ''
