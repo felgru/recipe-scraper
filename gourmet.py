@@ -55,6 +55,8 @@ class Gourmet:
         title.text = self.recipe.title
         link = ET.SubElement(r, "link")
         link.text = self.recipe.source
+        preptime = ET.SubElement(r, "preptime")
+        preptime.text = self.recipe.preptime
         cooktime = ET.SubElement(r, "cooktime")
         cooktime.text = self.recipe.cooktime
         yields = ET.SubElement(r, "yields")
