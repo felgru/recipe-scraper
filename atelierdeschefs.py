@@ -46,6 +46,13 @@ class AtelierDesChefs:
         return ingredients
 
     @staticmethod
+    def parseTime(time, page):
+        m = re.search(r'alt="Temps de ' + time + ' ".*?<span>\s*(.+?)\s',
+                      page, re.MULTILINE | re.DOTALL)
+        time = m.group(1)
+        return time.replace('mn',' min')
+
+    @staticmethod
     def parseInstructions(ld_json):
         inst_list = ld_json["recipeInstructions"]
         instructions_plain = inst_list[0]
@@ -76,12 +83,8 @@ class AtelierDesChefs:
         json_text = m.group(1).strip().replace('\r\n','\\n')
         ld_json = json.loads(json_text)
         instructions_plain = AtelierDesChefs.parseInstructions(ld_json)
-        m = re.search(r'alt="Temps de préparation ".*?<span>\s*(.+?)\s',
-                      page, re.MULTILINE | re.DOTALL)
-        preptime = m.group(1)
-        m = re.search(r'alt="Temps de cuisson ".*?<span>\s*(.+?)\s',
-                      page, re.MULTILINE | re.DOTALL)
-        cooktime = m.group(1)
+        preptime = AtelierDesChefs.parseTime('préparation', page)
+        cooktime = AtelierDesChefs.parseTime('cuisson', page)
         return recipe.recipe(
                 title = title,
                 cooktime = cooktime,
