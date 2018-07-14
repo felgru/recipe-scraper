@@ -75,14 +75,14 @@ importers = Importers()
 importers.add_scraper(AtelierDesChefs)
 importers.add_scraper(Marmiton)
 if not args.netloc in importers:
-    print('unknown website argument:', args.netloc)
+    print('unknown website argument:', args.netloc, file=sys.stderr)
     sys.exit(1)
 
 exporters = Exporters()
 exporters.add_format(MealMaster)
 exporters.add_format(Gourmet)
 if not args.format in exporters:
-    print('unknown file extension:', args.format)
+    print('unknown file extension:', args.format, file=sys.stderr)
     sys.exit(1)
 
 recipe_page = getUrl(args.url)
