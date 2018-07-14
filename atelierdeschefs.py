@@ -76,7 +76,6 @@ class AtelierDesChefs:
         json_text = m.group(1).strip().replace('\r\n','\\n')
         ld_json = json.loads(json_text)
         instructions_plain = AtelierDesChefs.parseInstructions(ld_json)
-        print(instructions_plain)
         m = re.search(r'alt="Temps de préparation ".*?<span>\s*(.+?)\s',
                       page, re.MULTILINE | re.DOTALL)
         preptime = m.group(1)
