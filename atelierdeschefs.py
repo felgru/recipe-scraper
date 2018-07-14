@@ -54,9 +54,10 @@ class AtelierDesChefs:
 
     @staticmethod
     def parseInstructions(ld_json):
-        inst_list = ld_json["recipeInstructions"]
-        instructions_plain = inst_list[0]
-        for instruction in inst_list[1:]:
+        inst_list = map(lambda s: s.replace('Etape :', 'Etape '),
+                        ld_json["recipeInstructions"])
+        instructions_plain = next(inst_list)
+        for instruction in inst_list:
             instructions_plain += '\n\n' + instruction
         return instructions_plain
 
