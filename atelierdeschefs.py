@@ -56,9 +56,9 @@ class AtelierDesChefs:
     @staticmethod
     def importRecipe(page):
         m = re.search(r'<meta property="og:url" content="(.+?)">', page)
-        source = m.group(0)
-        m = re.search(r'<span itemprop="title">\s*(.+?)\s*</span>', page)
-        title = m.group(0)
+        source = m.group(1)
+        m = re.search(r'<h1>Recette de (.+?)</h1>', page)
+        title = m.group(1)
         ingredients_pattern = re.compile('<div class="ingredients.*?</div>',
                                          re.MULTILINE | re.DOTALL)
         m = ingredients_pattern.search(page)
