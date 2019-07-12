@@ -19,8 +19,6 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import recipe
-
 class MealMaster:
     def __init__(self, recipe):
         self.recipe = recipe

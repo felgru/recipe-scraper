@@ -19,10 +19,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import io
 import xml.etree.ElementTree as ET
-
-import recipe
 
 def ingredientToGourmet(ingredient):
     ingrXML = ET.Element("ingredient")

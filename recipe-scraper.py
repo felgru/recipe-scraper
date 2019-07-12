@@ -25,25 +25,8 @@ import os
 import sys
 import urllib
 
-from web import getUrl
-
-# importers
-from atelierdeschefs import AtelierDesChefs
-from marmiton import Marmiton
-
-# exporters
-from gourmet import Gourmet
-from mealmaster import MealMaster
-
-class Exporters(dict):
-    def add_format(self, format_class):
-        key = format_class.file_extension()
-        self[key] = format_class
-
-class Importers(dict):
-    def add_scraper(self, scraper_class):
-        key = scraper_class.netloc()
-        self[key] = scraper_class
+from imports import getUrl, importers
+from exports import exporters
 
 aparser = argparse.ArgumentParser(
         description='transform a recipe from a cooking website into' \
@@ -71,16 +54,10 @@ if not args.format:
     else:
         args.format = '.mmf'
 
-importers = Importers()
-importers.add_scraper(AtelierDesChefs)
-importers.add_scraper(Marmiton)
 if not args.netloc in importers:
     print('unknown website argument:', args.netloc, file=sys.stderr)
     sys.exit(1)
 
-exporters = Exporters()
-exporters.add_format(MealMaster)
-exporters.add_format(Gourmet)
 if not args.format in exporters:
     print('unknown file extension:', args.format, file=sys.stderr)
     sys.exit(1)

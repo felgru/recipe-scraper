@@ -21,10 +21,9 @@
 
 import json
 import re
-import sys
 
-import ingredient
-import recipe
+from recipe.ingredient import ingredient
+from recipe.recipe import recipe
 
 class AtelierDesChefs:
     @staticmethod
@@ -42,7 +41,7 @@ class AtelierDesChefs:
             name = m.group(1)
             quantity = m.group(2)
             unit = m.group(3)
-            ingredients.append(ingredient.ingredient(name, quantity, unit))
+            ingredients.append(ingredient(name, quantity, unit))
         return ingredients
 
     @staticmethod
@@ -86,7 +85,7 @@ class AtelierDesChefs:
         instructions_plain = AtelierDesChefs.parseInstructions(ld_json)
         preptime = AtelierDesChefs.parseTime('préparation', page)
         cooktime = AtelierDesChefs.parseTime('cuisson', page)
-        return recipe.recipe(
+        return recipe(
                 title = title,
                 cooktime = cooktime,
                 preptime = preptime,

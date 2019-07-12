@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2018  Felix Gruber
+# Copyright (C) 2018–2019  Felix Gruber
 #
 # This file is part of recipe-scraper.
 #
@@ -19,18 +19,15 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import ingredient
+from .atelierdeschefs import AtelierDesChefs
+from .marmiton import Marmiton
+from .web import getUrl
 
-class recipe:
-    def __init__(self, title, cooktime, preptime, portions, categories,
-                 ingredients, instructions_plain=None,
-                 instructions_html=None, source=None):
-        self.title = title
-        self.cooktime = cooktime
-        self.preptime = preptime
-        self.portions = portions
-        self.categories = categories
-        self.ingredients = ingredients
-        self.instructions_plain = instructions_plain
-        self.instructions_html = instructions_html
-        self.source = source
+class Importers(dict):
+    def add_scraper(self, scraper_class):
+        key = scraper_class.netloc()
+        self[key] = scraper_class
+
+importers = Importers()
+importers.add_scraper(AtelierDesChefs)
+importers.add_scraper(Marmiton)

@@ -21,10 +21,9 @@
 
 import json
 import re
-import sys
 
-import ingredient
-import recipe
+from recipe.ingredient import ingredient
+from recipe.recipe import recipe
 
 class Marmiton:
     @staticmethod
@@ -36,7 +35,7 @@ class Marmiton:
         ingredients_json = recipe_json['ingredients']
         ingredients = []
         for ing in ingredients_json:
-            ingredients.append(ingredient.ingredient(
+            ingredients.append(ingredient(
                 ing['name'],
                 ing['qty'],
                 ing['unit']))
@@ -83,7 +82,7 @@ class Marmiton:
         instructions_plain, instructions_html = Marmiton.readInstructions(
                 instructions_json['recipeInstructions'])
         portions = instructions_json['recipeYield']
-        return recipe.recipe(
+        return recipe(
                 title = title,
                 cooktime = cooktime,
                 preptime = preptime,
