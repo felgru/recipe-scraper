@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2018  Felix Gruber
+# Copyright (C) 2018–2019  Felix Gruber
 #
 # This file is part of recipe-scraper.
 #
@@ -55,13 +55,11 @@ class AtelierDesChefs:
     def parseInstructions(ld_json):
         inst_list = map(lambda s: s.replace('Etape :', 'Etape '),
                         ld_json["recipeInstructions"])
-        instructions_plain = next(inst_list)
-        for instruction in inst_list:
-            instructions_plain += '\n\n' + instruction
+        instructions_plain = '\n\n'.join(inst_list)
         return instructions_plain
 
-    @staticmethod
-    def importRecipe(page):
+    @classmethod
+    def importRecipe(cls, page):
         m = re.search(r'<meta property="og:url" content="(.+?)">', page)
         source = m.group(1)
         m = re.search(r'<h1>Recette de (.+?)</h1>', page)
@@ -70,7 +68,7 @@ class AtelierDesChefs:
                                          re.MULTILINE | re.DOTALL)
         m = ingredients_pattern.search(page)
         (ingr_begin, ingr_end) = (m.start(), m.end())
-        ingredients = AtelierDesChefs.parseIngredients(page[ingr_begin:ingr_end])
+        ingredients = cls.parseIngredients(page[ingr_begin:ingr_end])
         m = re.search(r'<input type="hidden" name="nb_pers_recette" value="(.+?)">',
                 page)
         persons = m.group(1)
@@ -82,9 +80,9 @@ class AtelierDesChefs:
         # escape line endings, so json doesn't choke on them
         json_text = m.group(1).strip().replace('\r\n','\\n')
         ld_json = json.loads(json_text)
-        instructions_plain = AtelierDesChefs.parseInstructions(ld_json)
-        preptime = AtelierDesChefs.parseTime('préparation', page)
-        cooktime = AtelierDesChefs.parseTime('cuisson', page)
+        instructions_plain = cls.parseInstructions(ld_json)
+        preptime = cls.parseTime('préparation', page)
+        cooktime = cls.parseTime('cuisson', page)
         return recipe(
                 title = title,
                 cooktime = cooktime,

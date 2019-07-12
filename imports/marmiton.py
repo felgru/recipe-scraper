@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2018  Felix Gruber
+# Copyright (C) 2018–2019  Felix Gruber
 #
 # This file is part of recipe-scraper.
 #
@@ -43,19 +43,17 @@ class Marmiton:
 
     @staticmethod
     def readInstructions(instructions_json):
-        instructions_html = '<b>Etape 1</b>\n\n' \
-                + instructions_json[0]['text']
-        instructions_plain = instructions_json[0]['text']
-        etappe = 2
-        for instruction in instructions_json[1:]:
-            instructions_plain += '\n\n' + instruction['text']
-            instructions_html += '\n\n<b>Etappe {}</b>\n\n{}' \
-                    .format(etappe, instruction['text'])
-            etappe += 1
+        instructions_html = ('<b>Etappe {}</b>\n\n{}' \
+                             .format(etappe, instruction['text'])
+                             for etappe, instruction in
+                                 enumerate(instructions_json, start=1))
+        instructions_html = '\n\n'.join(instructions_html)
+        instructions_plain = '\n\n'.join(instruction['text']
+                                         for instruction in instructions_json)
         return instructions_plain, instructions_html
 
-    @staticmethod
-    def importRecipe(page):
+    @classmethod
+    def importRecipe(cls, page):
         # m = re.search('<meta property="og:title" content="(.*)" />', page)
         # title = m.group(1)
         m = re.search(r'<script type="text/javascript">var Mrtn = Mrtn \|\| \{\}; Mrtn\.recipesData = (.+?);</script>', page)
@@ -65,7 +63,7 @@ class Marmiton:
         source = recipe_json['url']
         # portions = '{} personnes'.format(recipe_json['nb_pers'])
         categories = []
-        ingredients = Marmiton.readIngredients(recipe_json)
+        ingredients = cls.readIngredients(recipe_json)
         m = re.search(r'<div class="recipe-infos__timmings__detail">', page)
         timings_start_pos = m.start()
         prep_pattern = re.compile('<div class="recipe-infos__timmings__preparation">.*?<span class="recipe-infos__timmings__value">\s*(.*?)\s*</span>',
@@ -79,7 +77,7 @@ class Marmiton:
         m = re.search(r'\{"\@context":"http:\/\/schema.org","@type":"Recipe",.+\}',
                       page)
         instructions_json = json.loads(m.group(0))
-        instructions_plain, instructions_html = Marmiton.readInstructions(
+        instructions_plain, instructions_html = cls.readInstructions(
                 instructions_json['recipeInstructions'])
         portions = instructions_json['recipeYield']
         return recipe(
