@@ -3,8 +3,15 @@
 > recipe-scraper helps you transform recipes from cooking websites
 > into machine-readable files
 
-Currently that only works for the French cooking site Marmiton but
-other sites will probably be added later.
+supported websites:
+
+* www.marmiton.org
+* www.atelierdeschefs.fr
+
+supported export formats:
+
+* Meal-Master (.mmf)
+* Gourmet (.grmt)
 
 You can run recipe-scraper by simply giving it a URL to a recipe.
 It will then print out the recipe in meal master format.
