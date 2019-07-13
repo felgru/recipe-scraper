@@ -19,14 +19,29 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from .gourmet import Gourmet
-from .mealmaster import MealMaster
-
 class Exporters(dict):
+    def __init__(self):
+        from importlib import import_module
+        import inspect
+        from os.path import join
+        from os import walk
+        _, _, filenames = next(walk(__path__[0]))
+        for f in filenames:
+            if f == '__init__.py':
+                continue
+            mod = inspect.getmodulename(join(__path__[0], f))
+            if mod is None:
+                continue
+            mod = import_module('.'+mod, __name__)
+            for elem in dir(mod):
+                elem = getattr(mod, elem)
+                if inspect.isclass(elem) and hasattr(elem, 'file_extension'):
+                    self.add_format(elem)
+
     def add_format(self, format_class):
-        key = format_class.file_extension()
+        key = format_class.file_extension
         self[key] = format_class
 
 exporters = Exporters()
-exporters.add_format(MealMaster)
-exporters.add_format(Gourmet)
+
+__all__ = ['exporters']

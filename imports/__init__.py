@@ -22,14 +22,29 @@
 from .json_ld import JsonLdImporter as FallbackImporter
 from .web import getUrl
 
-from .atelierdeschefs import AtelierDesChefs
-from .marmiton import Marmiton
-
 class Importers(dict):
+    def __init__(self):
+        from importlib import import_module
+        import inspect
+        from os.path import join
+        from os import walk
+        _, _, filenames = next(walk(__path__[0]))
+        for f in filenames:
+            if f == '__init__.py':
+                continue
+            mod = inspect.getmodulename(join(__path__[0], f))
+            if mod is None:
+                continue
+            mod = import_module('.'+mod, __name__)
+            for elem in dir(mod):
+                elem = getattr(mod, elem)
+                if inspect.isclass(elem) and hasattr(elem, 'netloc'):
+                    self.add_scraper(elem)
+
     def add_scraper(self, scraper_class):
         key = scraper_class.netloc
         self[key] = scraper_class
 
 importers = Importers()
-importers.add_scraper(AtelierDesChefs)
-importers.add_scraper(Marmiton)
+
+__all__ = ['getUrl', 'FallbackImporter', 'importers']

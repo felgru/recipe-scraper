@@ -20,12 +20,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 class MealMaster:
+    file_extension = '.mmf'
+
     def __init__(self, recipe):
         self.recipe = recipe
-
-    @staticmethod
-    def file_extension():
-        return '.mmf'
 
     def __str__(self):
         ingredients = ''

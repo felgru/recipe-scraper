@@ -38,12 +38,10 @@ def ingredientToGourmet(ingredient):
     return ingrXML
 
 class Gourmet:
+    file_extension = '.grmt'
+
     def __init__(self, recipe):
         self.recipe = recipe
-
-    @staticmethod
-    def file_extension():
-        return '.grmt'
 
     def __str__(self):
         gourmetDoc = ET.Element("gourmetDoc")
