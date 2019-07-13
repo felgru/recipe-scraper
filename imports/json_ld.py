@@ -64,7 +64,7 @@ def find_and_load_json_ld_recipe(page, start=0):
     return None
 
 def json_ld_to_recipe(ld_json, ingredient_parser=None):
-    title = ld_json.get('title')
+    title = ld_json.get('name')
     cooktime = ld_json.get('cookTime')
     cooktime = Duration.from_ISO_8601(cooktime) \
                if cooktime is not None else None
@@ -115,7 +115,7 @@ class Duration:
         if time_start < 0:
             time_start = len(s)
         date = cls._parse_iso_duration_substring(s[1:time_start], 'YMD')
-        time = cls._parse_iso_duration_substring(s[time_start:], 'HMS')
+        time = cls._parse_iso_duration_substring(s[time_start+1:], 'HMS')
         return cls(date, time)
 
     @staticmethod
@@ -124,12 +124,13 @@ class Duration:
         pos = 0
         end = len(s)
         while pos < end:
+            start_pos = pos
+            pos += 1
+            while pos < end and not s[pos].isalpha():
+                pos += 1
             token = s[pos]
-            next_pos = pos + 1
-            while next_pos < end and s[next_pos].isalpha():
-                next_pos += 1
-            res[token] = s[pos:next_pos]
-            pos = next_pos
+            res[token] = s[start_pos:pos]
+            pos += 1
         return tuple(res[t] for t in tokens)
 
     def __str__(self):
