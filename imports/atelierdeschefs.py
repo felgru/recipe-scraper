@@ -24,7 +24,7 @@ import re
 
 from recipe.ingredient import ingredient
 from recipe.instructions import instructions
-from recipe.recipe import recipe
+from recipe.recipe import recipe, Amount
 
 class AtelierDesChefs:
     netloc = 'www.atelierdeschefs.fr'
@@ -85,7 +85,7 @@ class AtelierDesChefs:
                 title = title,
                 cooktime = cooktime,
                 preptime = preptime,
-                portions = persons + ' personnes',
+                yields = Amount(persons, 'personnes'),
                 categories = [],
                 ingredients = ingredients,
                 instructions_plain = instructions_plain,

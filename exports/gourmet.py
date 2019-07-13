@@ -55,7 +55,7 @@ class Gourmet:
         cooktime = ET.SubElement(r, "cooktime")
         cooktime.text = str(self.recipe.cooktime)
         yields = ET.SubElement(r, "yields")
-        yields.text = self.recipe.portions
+        yields.text = str(self.recipe.yields)
         ingrs = ET.SubElement(r, "ingredient-list")
         for ingredient in self.recipe.ingredients:
             ingrs.append(ingredientToGourmet(ingredient))

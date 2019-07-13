@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2018  Felix Gruber
+# Copyright (C) 2018–2019  Felix Gruber
 #
 # This file is part of recipe-scraper.
 #
@@ -20,15 +20,30 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 class recipe:
-    def __init__(self, title, cooktime, preptime, portions, categories,
+    def __init__(self, title, cooktime, preptime, yields, categories,
                  ingredients, instructions_plain=None,
                  instructions_html=None, source=None):
         self.title = title
         self.cooktime = cooktime
         self.preptime = preptime
-        self.portions = portions
+        self.yields = yields
         self.categories = categories
         self.ingredients = ingredients
         self.instructions_plain = instructions_plain
         self.instructions_html = instructions_html
         self.source = source
+
+class Amount:
+    def __init__(self, quantity, unit=None):
+        self.quantity = quantity
+        self.unit = unit
+
+    def __str__(self):
+        if self.unit is None:
+            return str(self.quantity)
+        return '{s.quantity} {s.unit}'.format(s=self)
+
+    def __repr__(self):
+        if self.unit is None:
+            return 'Amount({!r})'.format(self.quantity)
+        return 'Amount({s.quantity!r}, {s.unit!r})'.format(s=self)

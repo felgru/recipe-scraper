@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2018  Felix Gruber
+# Copyright (C) 2018–2019  Felix Gruber
 #
 # This file is part of recipe-scraper.
 #
@@ -26,14 +26,12 @@ class MealMaster:
         self.recipe = recipe
 
     def __str__(self):
-        ingredients = ''
-        for ingredient in self.recipe.ingredients:
-            ingredients += ' ' + str(ingredient) + '\n'
+        ingredients = '\n'.join(' ' + str(i) for i in self.recipe.ingredients)
         return 'MMMMM----- Recipe via Meal-Master\n\n' \
                'Title: {r.title}\n' \
                'Cooktime: {r.cooktime}\n' \
                'Preparation Time: {r.preptime}\n' \
-               'Yield: {r.portions}\n' \
+               'Yield: {r.yields}\n' \
                'Categories: {cats}\n' \
                'Link: {r.source}\n\n' \
                '{ingredients}\n\n' \

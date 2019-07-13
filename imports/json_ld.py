@@ -23,7 +23,7 @@ import json
 import re
 
 from recipe.instructions import instructions
-from recipe.recipe import recipe
+from recipe.recipe import recipe, Amount
 
 class JsonLdImporter:
     @classmethod
@@ -71,7 +71,9 @@ def json_ld_to_recipe(ld_json, ingredient_parser=None):
     preptime = ld_json.get('prepTime')
     preptime = Duration.from_ISO_8601(preptime) \
                if preptime is not None else None
-    portions = ld_json.get('recipeYield')
+    yields = ld_json.get('recipeYield')
+    if yields is not None:
+        yields = Amount(*yields.split(maxsplit=1))
     categories = ld_json.get('recipeCategory', [])
     if categories and not isinstance(categories, list):
         categories = [categories]
@@ -85,7 +87,7 @@ def json_ld_to_recipe(ld_json, ingredient_parser=None):
             title = title,
             cooktime = cooktime,
             preptime = preptime,
-            portions = portions,
+            yields = yields,
             categories = categories,
             ingredients = ingredients,
             instructions_plain = instr,

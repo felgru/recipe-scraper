@@ -24,7 +24,7 @@ import re
 
 from recipe.ingredient import ingredient
 from recipe.instructions import instructions
-from recipe.recipe import recipe
+from recipe.recipe import recipe, Amount
 
 class Marmiton:
     netloc = 'www.marmiton.org'
@@ -60,7 +60,7 @@ class Marmiton:
         recipe_json = all_json['recipes'][0]
         title = recipe_json['name']
         source = recipe_json['url']
-        # portions = '{} personnes'.format(recipe_json['nb_pers'])
+        # yields = Amount(recipe_json['nb_pers'], 'personnes')
         categories = []
         ingredients = cls.readIngredients(recipe_json)
         m = re.search(r'<div class="recipe-infos__timmings__detail">', page)
@@ -78,12 +78,12 @@ class Marmiton:
         instructions_json = json.loads(m.group(0))
         instructions_plain, instructions_html = cls.readInstructions(
                 instructions_json['recipeInstructions'])
-        portions = instructions_json['recipeYield']
+        yields = Amount(*instructions_json['recipeYield'].split(maxsplit=1))
         return recipe(
                 title = title,
                 cooktime = cooktime,
                 preptime = preptime,
-                portions = portions,
+                yields = yields,
                 categories = categories,
                 ingredients = ingredients,
                 instructions_plain = instructions_plain,
