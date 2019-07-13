@@ -19,9 +19,11 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from .json_ld import JsonLdImporter as FallbackImporter
+from .web import getUrl
+
 from .atelierdeschefs import AtelierDesChefs
 from .marmiton import Marmiton
-from .web import getUrl
 
 class Importers(dict):
     def add_scraper(self, scraper_class):

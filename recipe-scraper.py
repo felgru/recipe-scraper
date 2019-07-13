@@ -25,7 +25,7 @@ import os
 import sys
 import urllib
 
-from imports import getUrl, importers
+from imports import getUrl, importers, FallbackImporter
 from exports import exporters
 
 aparser = argparse.ArgumentParser(
@@ -46,24 +46,28 @@ aparser.add_argument('-i', '--input-site', dest='netloc',
 aparser.add_argument('url', action='store',
                      help='URL of the recipe')
 args = aparser.parse_args()
-if not args.netloc:
-    args.netloc = urllib.parse.urlparse(args.url).netloc
+netloc = args.netloc or urllib.parse.urlparse(args.url).netloc
 if not args.format:
     if args.outfile:
         args.format = os.path.splitext(args.outfile)[1]
     else:
         args.format = '.mmf'
 
-if not args.netloc in importers:
-    print('unknown website argument:', args.netloc, file=sys.stderr)
-    sys.exit(1)
+try:
+    importer = importers[netloc]
+except KeyError:
+    if args.netloc:
+        print('unknown website argument:', netloc, file=sys.stderr)
+        sys.exit(1)
+    else:
+        importer = FallbackImporter
 
 if not args.format in exporters:
     print('unknown file extension:', args.format, file=sys.stderr)
     sys.exit(1)
 
 recipe_page = getUrl(args.url)
-recipe = importers[args.netloc].importRecipe(recipe_page)
+recipe = importer.importRecipe(recipe_page)
 
 out = exporters[args.format](recipe)
 

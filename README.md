@@ -8,6 +8,11 @@ supported websites:
 * www.marmiton.org
 * www.atelierdeschefs.fr
 
+As a fallback for unknown websites, recipe-scraper looks for JSON-LD
+content and tries to parse it. Since JSON-LD seems to be used by many
+recipe websites that might give you usable results without having to
+write a new importer.
+
 supported export formats:
 
 * Meal-Master (.mmf)
