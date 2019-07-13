@@ -26,9 +26,7 @@ from recipe.ingredient import ingredient
 from recipe.recipe import recipe
 
 class Marmiton:
-    @staticmethod
-    def netloc():
-        return 'www.marmiton.org'
+    netloc = 'www.marmiton.org'
 
     @staticmethod
     def readIngredients(recipe_json):

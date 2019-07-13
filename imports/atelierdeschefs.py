@@ -26,9 +26,7 @@ from recipe.ingredient import ingredient
 from recipe.recipe import recipe
 
 class AtelierDesChefs:
-    @staticmethod
-    def netloc():
-        return 'www.atelierdeschefs.fr'
+    netloc = 'www.atelierdeschefs.fr'
 
     @staticmethod
     def parseIngredients(ingredients_html):

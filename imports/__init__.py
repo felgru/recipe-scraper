@@ -25,7 +25,7 @@ from .web import getUrl
 
 class Importers(dict):
     def add_scraper(self, scraper_class):
-        key = scraper_class.netloc()
+        key = scraper_class.netloc
         self[key] = scraper_class
 
 importers = Importers()
