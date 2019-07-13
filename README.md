@@ -7,6 +7,7 @@ supported websites:
 
 * www.marmiton.org
 * www.atelierdeschefs.fr
+* www.chefkoch.de
 
 As a fallback for unknown websites, recipe-scraper looks for JSON-LD
 content and tries to parse it. Since JSON-LD seems to be used by many
