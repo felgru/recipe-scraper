@@ -23,6 +23,7 @@ import json
 import re
 
 from recipe.ingredient import ingredient
+from recipe.instructions import instructions
 from recipe.recipe import recipe
 
 class Marmiton:
@@ -45,9 +46,9 @@ class Marmiton:
                              .format(etappe, instruction['text'])
                              for etappe, instruction in
                                  enumerate(instructions_json, start=1))
-        instructions_html = '\n\n'.join(instructions_html)
-        instructions_plain = '\n\n'.join(instruction['text']
-                                         for instruction in instructions_json)
+        instructions_html = instructions(instructions_html)
+        instructions_plain = instructions(instruction['text']
+                                          for instruction in instructions_json)
         return instructions_plain, instructions_html
 
     @classmethod

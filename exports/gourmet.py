@@ -62,9 +62,9 @@ class Gourmet:
         for ingredient in self.recipe.ingredients:
             ingrs.append(ingredientToGourmet(ingredient))
         instructions = ET.SubElement(r, "instructions")
-        instructions.text = self.recipe.instructions_html \
+        instructions.text = str(self.recipe.instructions_html) \
                 if self.recipe.instructions_html \
-                else self.recipe.instructions_plain
+                else str(self.recipe.instructions_plain)
         res = '<?xml version="1.0" encoding="UTF-8"?>\n' \
               '<!DOCTYPE gourmetDoc>\n' \
               + ET.tostring(gourmetDoc) \

@@ -23,6 +23,7 @@ import json
 import re
 
 from recipe.ingredient import ingredient
+from recipe.instructions import instructions
 from recipe.recipe import recipe
 
 class AtelierDesChefs:
@@ -51,10 +52,9 @@ class AtelierDesChefs:
 
     @staticmethod
     def parseInstructions(ld_json):
-        inst_list = map(lambda s: s.replace('Etape :', 'Etape '),
-                        ld_json["recipeInstructions"])
-        instructions_plain = '\n\n'.join(inst_list)
-        return instructions_plain
+        inst_list = (s.replace('Etape :', 'Etape ')
+                     for s in ld_json["recipeInstructions"])
+        return instructions(inst_list)
 
     @classmethod
     def importRecipe(cls, page):
