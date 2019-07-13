@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2018  Felix Gruber
+# Copyright (C) 2018–2019  Felix Gruber
 #
 # This file is part of recipe-scraper.
 #
@@ -20,18 +20,29 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 class ingredient:
-    def __init__(self, name, quantity, unit, optional=False):
+    def __init__(self, name, amount, optional=False):
         self.name = name
-        self.quantity = quantity
-        self.unit = unit
+        self.amount = amount
         self.optional = optional
 
+    @property
+    def quantity(self):
+        if self.amount is None:
+            return None
+        return self.amount.quantity
+
+    @property
+    def unit(self):
+        if self.amount is None:
+            return None
+        return self.amount.unit
+
     def __str__(self):
-        result = '{} {} {}'.format(self.quantity, self.unit, self.name)
+        result = '{} {}'.format(self.amount, self.name)
         if self.optional:
             result += ' (optional)'
         return result
 
     def __repr__(self):
-        return 'ingredient("{s.name}", {s.quantity}, "{s.unit}",' \
-               ' optional={s.optional})'.format(s=self)
+        return 'ingredient({s.name!r}, {s.amount!r}, optional={s.optional})' \
+               .format(s=self)

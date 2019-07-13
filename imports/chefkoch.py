@@ -22,6 +22,7 @@
 import re
 
 from recipe.ingredient import ingredient
+from recipe.recipe import Amount
 
 from .json_ld import *
 
@@ -44,5 +45,6 @@ class Chefkoch:
         ingr_pattern = re.compile('(.*?) (.*?) (.+)')
         m = ingr_pattern.match(ingr)
         quantity = m.group(1).rstrip('0').rstrip(',')
+        unit = m.group(2).strip() or None
         name = m.group(3).replace(' ,', ',')
-        return ingredient(name, quantity, m.group(2))
+        return ingredient(name, Amount(quantity, unit))

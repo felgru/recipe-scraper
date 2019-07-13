@@ -39,8 +39,8 @@ class AtelierDesChefs:
         for m in ingredient_pattern.finditer(ingredients_html):
             name = m.group(1)
             quantity = m.group(2)
-            unit = m.group(3)
-            ingredients.append(ingredient(name, quantity, unit))
+            unit = m.group(3) or None
+            ingredients.append(ingredient(name, Amount(quantity, unit)))
         return ingredients
 
     @staticmethod

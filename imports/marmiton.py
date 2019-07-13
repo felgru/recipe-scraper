@@ -32,13 +32,9 @@ class Marmiton:
     @staticmethod
     def readIngredients(recipe_json):
         ingredients_json = recipe_json['ingredients']
-        ingredients = []
-        for ing in ingredients_json:
-            ingredients.append(ingredient(
-                ing['name'],
-                ing['qty'],
-                ing['unit']))
-        return ingredients
+        return [ingredient(ing['name'],
+                           Amount(ing['qty'], ing['unit'] or None))
+                for ing in ingredients_json]
 
     @staticmethod
     def readInstructions(instructions_json):
