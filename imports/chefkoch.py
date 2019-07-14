@@ -36,8 +36,8 @@ class Chefkoch:
         source = m.group(1)
         json_ld = find_and_load_json_ld_recipe(page, m.end())
         recipe = json_ld_to_recipe(json_ld,
-                                   ingredient_parser=cls._parse_ingredient)
-        recipe.source = source
+                                   ingredient_parser = cls._parse_ingredient,
+                                   source = source)
         return recipe
 
     @classmethod

@@ -38,7 +38,10 @@ class ingredient:
         return self.amount.unit
 
     def __str__(self):
-        result = '{} {}'.format(self.amount, self.name)
+        if self.amount is None:
+            result = self.name
+        else:
+            result = '{} {}'.format(self.amount, self.name)
         if self.optional:
             result += ' (optional)'
         return result

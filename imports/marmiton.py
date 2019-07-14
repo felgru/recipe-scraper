@@ -24,64 +24,42 @@ import re
 
 from recipe.ingredient import ingredient
 from recipe.instructions import instructions
-from recipe.recipe import recipe, Amount
+from recipe.recipe import Amount
+
+from .json_ld import *
 
 class Marmiton:
     netloc = 'www.marmiton.org'
 
-    @staticmethod
-    def readIngredients(recipe_json):
-        ingredients_json = recipe_json['ingredients']
-        return [ingredient(ing['name'],
-                           Amount(ing['qty'], ing['unit'] or None))
-                for ing in ingredients_json]
-
-    @staticmethod
-    def readInstructions(instructions_json):
-        instructions_html = ('<b>Etappe {}</b>\n\n{}' \
-                             .format(etappe, instruction['text'])
-                             for etappe, instruction in
-                                 enumerate(instructions_json, start=1))
-        instructions_html = instructions(instructions_html)
-        instructions_plain = instructions(instruction['text']
-                                          for instruction in instructions_json)
-        return instructions_plain, instructions_html
-
     @classmethod
     def importRecipe(cls, page):
-        # m = re.search('<meta property="og:title" content="(.*)" />', page)
-        # title = m.group(1)
         m = re.search(r'<script type="text/javascript">var Mrtn = Mrtn \|\| \{\}; Mrtn\.recipesData = (.+?);</script>', page)
-        all_json = json.loads(m.group(1))
-        recipe_json = all_json['recipes'][0]
-        title = recipe_json['name']
-        source = recipe_json['url']
-        # yields = Amount(recipe_json['nb_pers'], 'personnes')
-        categories = []
-        ingredients = cls.readIngredients(recipe_json)
-        m = re.search(r'<div class="recipe-infos__timmings__detail">', page)
-        timings_start_pos = m.start()
-        prep_pattern = re.compile('<div class="recipe-infos__timmings__preparation">.*?<span class="recipe-infos__timmings__value">\s*(.*?)\s*</span>',
-                re.MULTILINE | re.DOTALL)
-        m = prep_pattern.search(page, timings_start_pos)
-        preptime = m.group(1)
-        cook_pattern = re.compile('<div class="recipe-infos__timmings__cooking">.*?<span class="recipe-infos__timmings__value">\s*(.*?)\s*</span>',
-                re.MULTILINE | re.DOTALL)
-        m = cook_pattern.search(page, timings_start_pos)
-        cooktime = m.group(1)
+        metadata_json = json.loads(m.group(1))
+        source = metadata_json['recipes'][0]['url']
         m = re.search(r'\{"\@context":"http:\/\/schema.org","@type":"Recipe",.+\}',
                       page)
-        instructions_json = json.loads(m.group(0))
-        instructions_plain, instructions_html = cls.readInstructions(
-                instructions_json['recipeInstructions'])
-        yields = Amount(*instructions_json['recipeYield'].split(maxsplit=1))
-        return recipe(
-                title = title,
-                cooktime = cooktime,
-                preptime = preptime,
-                yields = yields,
-                categories = categories,
-                ingredients = ingredients,
-                instructions_plain = instructions_plain,
-                instructions_html = instructions_html,
-                source = source)
+        json_ld = load_json_ld(m.group(0))
+        recipe = json_ld_to_recipe(json_ld,
+                                   ingredient_parser = cls._parse_ingredient,
+                                   source = source)
+        instructions_html = ('<b>Etappe {}</b>\n\n{}' \
+                             .format(etappe, instr)
+                             for etappe, instr in
+                                 enumerate(recipe.instructions_plain, start=1))
+        recipe.instructions_html = instructions(instructions_html)
+        return recipe
+
+    @classmethod
+    def _parse_ingredient(cls, ingr):
+        ingr_pattern = re.compile(r'(\d\S*)?\s*\b(\S*? de|.*?)\s*\b(.+)')
+        m = ingr_pattern.match(ingr)
+        quantity = m.group(1) or None
+        unit = m.group(2) or None
+        amount = Amount(quantity, unit) if quantity is not None else None
+        name = m.group(3)
+        optional_pattern = re.compile('(.+) \(facultatif\)$')
+        optional = optional_pattern.match(name)
+        if optional is not None:
+            name = optional.group(1)
+        ingr = ingredient(name, amount, bool(optional))
+        return ingr

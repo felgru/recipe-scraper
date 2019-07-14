@@ -63,7 +63,7 @@ def find_and_load_json_ld_recipe(page, start=0):
             return ld_json
     return None
 
-def json_ld_to_recipe(ld_json, ingredient_parser=None):
+def json_ld_to_recipe(ld_json, *, ingredient_parser=None, source=None):
     title = ld_json.get('name')
     cooktime = ld_json.get('cookTime')
     cooktime = Duration.from_ISO_8601(cooktime) \
@@ -82,6 +82,9 @@ def json_ld_to_recipe(ld_json, ingredient_parser=None):
         ingredients = [ingredient_parser(i) for i in ingredients]
     instr = ld_json.get('recipeInstructions')
     if instr is not None:
+        if isinstance(instr, list) and instr and isinstance(instr[0], dict) \
+           and instr[0].get('@type') == 'HowToStep':
+               instr = (i['text'].strip() for i in instr)
         instr = instructions(instr)
     return recipe(
             title = title,
@@ -92,7 +95,7 @@ def json_ld_to_recipe(ld_json, ingredient_parser=None):
             ingredients = ingredients,
             instructions_plain = instr,
             instructions_html = None,
-            source = None)
+            source = source)
 
 class Duration:
     def __init__(self, date = (None, None, None),
