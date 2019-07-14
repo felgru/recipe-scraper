@@ -44,7 +44,8 @@ class Chefkoch:
     def _parse_ingredient(cls, ingr):
         ingr_pattern = re.compile('(.*?) (.*?) (.+)')
         m = ingr_pattern.match(ingr)
-        quantity = m.group(1).rstrip('0').rstrip(',')
+        quantity = m.group(1).rstrip('0').rstrip(',') or None
         unit = m.group(2).strip() or None
+        amount = Amount(quantity, unit) if quantity is not None else None
         name = m.group(3).replace(' ,', ',')
-        return ingredient(name, Amount(quantity, unit))
+        return ingredient(name, amount)
