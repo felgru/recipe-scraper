@@ -110,12 +110,6 @@ class Duration:
     @classmethod
     def from_ISO_8601(cls, s):
         assert s[0] == 'P'
-        dur = dict(year=None,
-                   month=None,
-                   day=None,
-                   hour=None,
-                   minute=None,
-                   second=None)
         time_start = s.find('T')
         if time_start < 0:
             time_start = len(s)
