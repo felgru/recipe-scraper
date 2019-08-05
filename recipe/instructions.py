@@ -37,7 +37,8 @@ class instructions:
 
     def __iter__(self):
         if not self.is_list():
-            raise ValueError('Trying to iterate over instructions that are not given as a list.')
+            raise ValueError('Trying to iterate over instructions that'
+                             ' are not given as a list.')
         return iter(self.data)
 
     def __str__(self):

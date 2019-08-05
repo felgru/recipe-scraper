@@ -45,7 +45,7 @@ class AtelierDesChefs:
 
     @staticmethod
     def parseTime(time, page):
-        m = re.search(r'alt="Temps de ' + time + ' ".*?<span>\s*(.+?)\s',
+        m = re.search(r'alt="Temps de ' + time + r' ".*?<span>\s*(.+?)\s',
                       page, re.MULTILINE | re.DOTALL)
         time = m.group(1)
         return time.replace('mn',' min')
@@ -68,7 +68,7 @@ class AtelierDesChefs:
         (ingr_begin, ingr_end) = (m.start(), m.end())
         ingredients = cls.parseIngredients(page[ingr_begin:ingr_end])
         m = re.search(r'<input type="hidden" name="nb_pers_recette" value="(.+?)">',
-                page)
+                      page)
         persons = m.group(1)
         json_pattern = re.compile(
                 r'<script type="application\/ld\+json">(.*?)</script>',
@@ -76,7 +76,7 @@ class AtelierDesChefs:
         # start from the end of the last match to find the right json object
         m = json_pattern.search(page, m.end())
         # escape line endings, so json doesn't choke on them
-        json_text = m.group(1).strip().replace('\r\n','\\n')
+        json_text = m.group(1).strip().replace('\r\n', '\\n')
         ld_json = json.loads(json_text)
         instructions_plain = cls.parseInstructions(ld_json)
         preptime = cls.parseTime('préparation', page)

@@ -57,7 +57,7 @@ class Marmiton:
         unit = m.group(2) or None
         amount = Amount(quantity, unit) if quantity is not None else None
         name = m.group(3)
-        optional_pattern = re.compile('(.+) \(facultatif\)$')
+        optional_pattern = re.compile(r'(.+) \(facultatif\)$')
         optional = optional_pattern.match(name)
         if optional is not None:
             name = optional.group(1)

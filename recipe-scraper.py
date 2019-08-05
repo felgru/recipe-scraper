@@ -29,7 +29,7 @@ from imports import getUrl, importers, FallbackImporter
 from exports import exporters
 
 aparser = argparse.ArgumentParser(
-        description='transform a recipe from a cooking website into' \
+        description='transform a recipe from a cooking website into'
                     ' a machine-readable format')
 aparser.add_argument('-o', metavar='OUTFILE', dest='outfile', default=None,
                      help='write to OUTFILE instead of stdout'
@@ -62,7 +62,7 @@ except KeyError:
     else:
         importer = FallbackImporter
 
-if not args.format in exporters:
+if args.format not in exporters:
     print('unknown file extension:', args.format, file=sys.stderr)
     sys.exit(1)
 
